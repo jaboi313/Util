@@ -13,7 +13,7 @@ class Dictionary(dict):
     def __init__(self, dictionary:dict=None) -> None:
         if dictionary is None:
             dictionary = {}
-            
+
         super().__init__(dictionary)
 
     def __str__(self) -> str:
@@ -28,10 +28,10 @@ class Dictionary(dict):
         - literal dictionary
         - reversed dictionary
         - inverted dictionary
-        - amount of key's
-        - amount of values
-        - amount of key's (no empty)
-        - amount of values (no empty)
+        - number of keys
+        - number of values
+        - number of keys (non-empty)
+        - number of values (non-empty)
         - sorted by key - ascending
         - sorted by key - descending
         - sorted by value - ascending
@@ -52,10 +52,10 @@ class Dictionary(dict):
             f"Literal dictionary: {lit}",
             f"Reversed dictionary: {rev}",
             f"Inverted dictionary: {inv}",
-            f"Amount of keys: {ak}",
-            f"Amount of values: {av}",
-            f"Amount of keys (no empty): {akne}",
-            f"Amount of values (no empty): {avne}",
+            f"Number of keys: {ak}",
+            f"Number of values: {av}",
+            f"Number of keys (non-empty): {akne}",
+            f"Number of values (non-empty): {avne}",
             f"Sorted by key - ascending: {sbka}",
             f"Sorted by key - descending: {sbkd}",
             f"Sorted by value - ascending: {sbva}",
@@ -85,7 +85,7 @@ class Dictionary(dict):
         return Dictionary(reversed(self.items()))
     
     def count_keys(self, no_empty:bool=False) -> int:
-        """Returns the amount of keys in the dictionary.\n
+        """Returns the number of keys in the dictionary.\n
         If `no_empty` is `False` empty keys will be counted.\n
         If `True` empty keys will be skipped
         """
@@ -94,7 +94,7 @@ class Dictionary(dict):
         return len(self.keys())
     
     def count_values(self, no_empty:bool=False) -> int:
-        """Returns the amount of values in the dictionary.\n
+        """Returns the number of values in the dictionary.\n
         If `no_empty` is `False` empty values will be counted.\n
         If `True` empty values will be skipped
         """
