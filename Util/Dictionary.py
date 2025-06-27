@@ -7,12 +7,12 @@ class Dictionary(dict):
         self.__sort_order_options_ascending = 'ascending', 'asc', 
         self.__sort_order_options_descending = 'descending', 'des'
 
-    def __str__(self) -> str:    # TODO: add functionality
-        return "str"
-    
-    def __repr__(self) -> str:    # TODO: add functionality
-        return "rpr"
-    
+    def __str__(self) -> str:
+        return f"{dict(self)}"
+
+    def __repr__(self) -> str:
+        return f"Dictionary({dict(self)})"
+
     def describe(self) -> str:
         """Returns general info about the dictionary.\n
         Info returned:\n
