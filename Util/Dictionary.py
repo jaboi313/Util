@@ -1,11 +1,20 @@
 from typing import Literal
 
+SORT_ORDER_OPTIONS_ALL = 'ascending', 'descending', 'asc', 'desc', 'a', 'd'
+SORT_ORDER_OPTIONS_ASC = 'ascending', 'asc', 'a'
+SORT_ORDER_OPTIONS_DESC = 'descending', 'desc', 'd'
+
+SortOrderLiteral = Literal['ascending', 'descending', 'asc', 'desc', 'a', 'd']
+
+EMPTY = (None, '', [], {}, ())
+
+
 class Dictionary(dict):
-    def __init__(self, dictionary:dict={}) -> None:
-        self.__dictionary = dictionary
-        self.__sort_order_options_all = 'ascending', 'descending', 'asc', 'des'
-        self.__sort_order_options_ascending = 'ascending', 'asc', 
-        self.__sort_order_options_descending = 'descending', 'des'
+    def __init__(self, dictionary:dict=None) -> None:
+        if dictionary is None:
+            dictionary = {}
+            
+        super().__init__(dictionary)
 
     def __str__(self) -> str:
         return f"{dict(self)}"
@@ -47,44 +56,46 @@ class Dictionary(dict):
         """Returns the inverted dictionary in dict form"""
         return self.__dictionary
     
-    def count_keys(self, no_empty:bool=False) -> int:    # TODO: add functionality
+    def count_keys(self, no_empty:bool=False) -> int:
         """Returns the amount of keys in the dictionary.\n
         If `no_empty` is `False` empty keys will be counted.\n
         If `True` empty keys will be skipped
         """
-        return 1
+        if no_empty:
+            return sum(1 for key in self.keys() if key not in EMPTY)
+        return len(self.keys())
     
-    def count_values(self, no_empty:bool=False) -> int:    # TODO: add functionality
+    def count_values(self, no_empty:bool=False) -> int:
         """Returns the amount of values in the dictionary.\n
         If `no_empty` is `False` empty values will be counted.\n
         If `True` empty values will be skipped
         """
-        return 2
+        if no_empty:
+            return sum(1 for value in self.values() if value not in EMPTY)
+        return len(self.values())
 
-    def sort_by_key(self, sort_order: Literal['ascending', 'descending', 'asc', 'des'] = 'ascending') -> dict:    # TODO: add docstrings # TODO: fix literal not using self.__sort_order_options_all
-        if not isinstance(sort_order, str):
-            raise TypeError(f"Invalid sort_order '{sort_order}'. sort_order must be a string. Choose from: {self.__sort_order_options_all}.")
-
-        if sort_order in self.__sort_order_options_ascending:
+    def sort_by_key(self, sort_order: SortOrderLiteral = 'ascending') -> 'Dictionary':
+        """Returns the sorted dictionary by key\n
+        Ascending = `low -> high` : `a, b, c` or `1,2,3`"""
+        if sort_order in SORT_ORDER_OPTIONS_ASC:
             reverse = False
-        elif sort_order in self.__sort_order_options_descending:
+        elif sort_order in SORT_ORDER_OPTIONS_DESC:
             reverse = True
         else:
-            raise ValueError(f"Invalid sort_order '{sort_order}'. Choose from: {self.__sort_order_options_all}.")
+            raise ValueError(f"Invalid sort_order '{sort_order}'. Choose from: {SORT_ORDER_OPTIONS_ALL}.")
 
         sorted_items = sorted(self.__dictionary.items(), key=lambda item: item[0], reverse=reverse)
         return dict(sorted_items)
     
-    def sort_by_value(self, sort_order: Literal['ascending', 'descending', 'a', 'd'] = 'ascending') -> dict:    # TODO: add docstrings # TODO: fix literal not using self.__sort_order_options_all
-        if not isinstance(sort_order, str):
-            raise TypeError(f"Invalid sort_order '{sort_order}'. sort_order must be a string. Choose from: {self.__sort_order_options_all}.")
-
-        if sort_order in self.__sort_order_options_ascending:
+    def sort_by_value(self, sort_order: SortOrderLiteral = 'ascending') -> 'Dictionary':
+        """Returns the sorted dictionary by value\n
+        Ascending = `low -> high` : `a, b, c` or `1,2,3`"""
+        if sort_order in SORT_ORDER_OPTIONS_ASC:
             reverse = False
-        elif sort_order in self.__sort_order_options_descending:
+        elif sort_order in SORT_ORDER_OPTIONS_DESC:
             reverse = True
         else:
-            raise ValueError(f"Invalid sort_order '{sort_order}'. Choose from: {self.__sort_order_options_all}.")
+            raise ValueError(f"Invalid sort_order '{sort_order}'. Choose from: {SORT_ORDER_OPTIONS_ALL}.")
 
         sorted_items = sorted(self.__dictionary.items(), key=lambda item: item[1], reverse=reverse)
         return dict(sorted_items)
