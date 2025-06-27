@@ -60,6 +60,10 @@ class Dictionary(dict):
             f"Sorted by key - descending: {sbkd}",
             f"Sorted by value - ascending: {sbva}",
             f"Sorted by value - descending: {sbvd}", ""])
+    
+    def to_dict(self) -> dict:
+        """Returns a plain Python dict version of the Dictionary."""
+        return dict(self)
 
     def invert(self) -> 'Dictionary':
         """Returns the inverted dictionary (swap the key & value)\n
