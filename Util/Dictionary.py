@@ -26,6 +26,7 @@ class Dictionary(dict):
         """Returns general info about the dictionary.\n
         Info returned:\n
         - literal dictionary
+        - reversed dictionary
         - inverted dictionary
         - amount of key's
         - amount of values
@@ -36,25 +37,52 @@ class Dictionary(dict):
         - sorted by value - ascending
         - sorted by value - descending
         """
-        lit = self.literal()
+        lit = dict(self)
+        rev = self.reverse()
         inv = self.invert()
         ak = self.count_keys(no_empty=False)
         av = self.count_values(no_empty=False)
         akne = self.count_keys(no_empty=True)
         avne = self.count_values(no_empty=True)
         sbka = self.sort_by_key(sort_order='asc')
-        sbkd = self.sort_by_key(sort_order='des')
+        sbkd = self.sort_by_key(sort_order='desc')
         sbva = self.sort_by_value(sort_order='asc')
-        sbvd = self.sort_by_value(sort_order='des')
-        return f"""\nLiteral dictionary: {lit}\nInverted dictionary: {inv}\nAmount of key's: {ak}\nAmount of values: {av}\nAmount of key's (no empty): {akne}\nAmount of values (no empty): {avne}\nSorted by key - ascending: {sbka}\nSorted by key - descending: {sbkd}\nSorted by value - ascending: {sbva}\nSorted by value - descending: {sbvd}\n"""
-    
-    def literal(self) -> dict:
-        """Returns the literal dictionary in dict form"""
-        return self.__dictionary
+        sbvd = self.sort_by_value(sort_order='desc')
+        return "\n".join(["",
+            f"Literal dictionary: {lit}",
+            f"Reversed dictionary: {rev}",
+            f"Inverted dictionary: {inv}",
+            f"Amount of keys: {ak}",
+            f"Amount of values: {av}",
+            f"Amount of keys (no empty): {akne}",
+            f"Amount of values (no empty): {avne}",
+            f"Sorted by key - ascending: {sbka}",
+            f"Sorted by key - descending: {sbkd}",
+            f"Sorted by value - ascending: {sbva}",
+            f"Sorted by value - descending: {sbvd}", ""])
 
-    def invert(self) -> dict:    # TODO: add functionality
-        """Returns the inverted dictionary in dict form"""
-        return self.__dictionary
+    def invert(self) -> 'Dictionary':
+        """Returns the inverted dictionary (swap the key & value)\n
+        Example: `{'a': 1, 'b': 2, 'c': 1, 'd':3}` -> `{1: ['a', 'c'], 2:'b', 3:'d'}`"""
+        inverted = Dictionary()
+        flattend_inverted = Dictionary()
+        for key, value in self.items():
+            if value in inverted:
+                inverted[value].append(key)
+            else:
+                inverted[value] = [key]
+        
+        for key, value in inverted.items():
+            if isinstance(value, list) and len(value) == 1:
+                flattend_inverted[key] = value[0]
+            else:
+                flattend_inverted[key] = value
+        return flattend_inverted
+    
+    def reverse(self) -> 'Dictionary':
+        """Returns the reversed dictionary\n
+        Example: `{'a': 1, 'b': 2, 'c': 1, 'd':3}` -> `{'d':3, 'c': 1, 'b': 2, 'a': 1}`"""
+        return Dictionary(reversed(self.items()))
     
     def count_keys(self, no_empty:bool=False) -> int:
         """Returns the amount of keys in the dictionary.\n
@@ -84,8 +112,8 @@ class Dictionary(dict):
         else:
             raise ValueError(f"Invalid sort_order '{sort_order}'. Choose from: {SORT_ORDER_OPTIONS_ALL}.")
 
-        sorted_items = sorted(self.__dictionary.items(), key=lambda item: item[0], reverse=reverse)
-        return dict(sorted_items)
+        sorted_items = sorted(self.items(), key=lambda item: str(item[0]), reverse=reverse)
+        return Dictionary(sorted_items)
     
     def sort_by_value(self, sort_order: SortOrderLiteral = 'ascending') -> 'Dictionary':
         """Returns the sorted dictionary by value\n
@@ -97,6 +125,6 @@ class Dictionary(dict):
         else:
             raise ValueError(f"Invalid sort_order '{sort_order}'. Choose from: {SORT_ORDER_OPTIONS_ALL}.")
 
-        sorted_items = sorted(self.__dictionary.items(), key=lambda item: item[1], reverse=reverse)
-        return dict(sorted_items)
+        sorted_items = sorted(self.items(), key=lambda item: str(item[1]), reverse=reverse)
+        return Dictionary(sorted_items)
 
